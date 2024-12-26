@@ -28,96 +28,48 @@
         /// </summary>
         private void InitializeComponent()
         {
-            panelMain = new Panel();
-            panelPartner = new Panel();
-            label3 = new Label();
-            label2 = new Label();
-            label1 = new Label();
             backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            panelMain.SuspendLayout();
-            panelPartner.SuspendLayout();
+            panelSettings = new Panel();
+            panelPartners = new Panel();
             SuspendLayout();
             // 
-            // panelMain
+            // panelSettings
             // 
-            panelMain.Controls.Add(panelPartner);
-            panelMain.Dock = DockStyle.Fill;
-            panelMain.Location = new Point(0, 0);
-            panelMain.Name = "panelMain";
-            panelMain.Padding = new Padding(10);
-            panelMain.Size = new Size(800, 450);
-            panelMain.TabIndex = 0;
+            panelSettings.BorderStyle = BorderStyle.FixedSingle;
+            panelSettings.Dock = DockStyle.Top;
+            panelSettings.Location = new Point(0, 0);
+            panelSettings.Margin = new Padding(5);
+            panelSettings.Name = "panelSettings";
+            panelSettings.Size = new Size(1257, 73);
+            panelSettings.TabIndex = 0;
             // 
-            // panelPartner
+            // panelPartners
             // 
-            panelPartner.BackColor = Color.White;
-            panelPartner.Controls.Add(label3);
-            panelPartner.Controls.Add(label2);
-            panelPartner.Controls.Add(label1);
-            panelPartner.Cursor = Cursors.Hand;
-            panelPartner.Dock = DockStyle.Top;
-            panelPartner.Location = new Point(10, 10);
-            panelPartner.Name = "panelPartner";
-            panelPartner.Padding = new Padding(15, 10, 15, 10);
-            panelPartner.Size = new Size(780, 112);
-            panelPartner.TabIndex = 0;
-            panelPartner.Click += panelPartner_Click;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Dock = DockStyle.Left;
-            label3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label3.Location = new Point(15, 35);
-            label3.Name = "label3";
-            label3.Size = new Size(136, 63);
-            label3.TabIndex = 3;
-            label3.Text = "Директор\r\n+7 000 111 22 33\r\nРейтинг: 10";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Dock = DockStyle.Top;
-            label2.Font = new Font("Segoe UI Semibold", 14F, FontStyle.Bold);
-            label2.Location = new Point(15, 10);
-            label2.Name = "label2";
-            label2.Size = new Size(286, 25);
-            label2.TabIndex = 2;
-            label2.Text = "Тип | Наименование компании";
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Dock = DockStyle.Right;
-            label1.Font = new Font("Segoe UI", 14F);
-            label1.Location = new Point(717, 10);
-            label1.Name = "label1";
-            label1.Size = new Size(48, 25);
-            label1.TabIndex = 1;
-            label1.Text = "10%";
+            panelPartners.BorderStyle = BorderStyle.FixedSingle;
+            panelPartners.Dock = DockStyle.Fill;
+            panelPartners.Location = new Point(0, 73);
+            panelPartners.Name = "panelPartners";
+            panelPartners.Size = new Size(1257, 677);
+            panelPartners.TabIndex = 1;
             // 
             // FormMain
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(11F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
-            Controls.Add(panelMain);
+            ClientSize = new Size(1257, 750);
+            Controls.Add(panelPartners);
+            Controls.Add(panelSettings);
+            Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            Margin = new Padding(5);
             Name = "FormMain";
             ShowIcon = false;
             Text = "Список партнеров";
-            panelMain.ResumeLayout(false);
-            panelPartner.ResumeLayout(false);
-            panelPartner.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
-
-        private Panel panelMain;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private Panel panelPartner;
-        private Label label2;
-        private Label label1;
-        private Label label3;
+        private Panel panelSettings;
+        private Panel panelPartners;
     }
 }
