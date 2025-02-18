@@ -82,8 +82,8 @@ namespace Work_4
         }
 
         private void ItemSelected_Click(object sender, EventArgs e)
-        { 
-
+        {
+            MessageBox.Show((sender as Panel).Name);
         }
     }
 }
