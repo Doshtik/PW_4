@@ -69,6 +69,7 @@
             bttnUpdate.TabIndex = 1;
             bttnUpdate.Text = "Редктировать";
             bttnUpdate.UseVisualStyleBackColor = true;
+            bttnUpdate.Click += BttnUpdate_Click;
             // 
             // bttnCreate
             // 

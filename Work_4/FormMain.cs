@@ -1,18 +1,20 @@
-
 using Microsoft.EntityFrameworkCore;
+using System.Windows.Forms;
 
 namespace Work_4
 {
     public partial class FormMain : Form
     {
         private Models.AppContext _db;
-        int _y = 0;
+        private static int _y = 0;
+        private static Panel? _selectedPanel;
 
 
         public FormMain()
         {
             InitializeComponent();
         }
+
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -21,14 +23,11 @@ namespace Work_4
             _db.FromProductsToPartners.Load();
         }
 
-        private void BttnCreate_Click(object sender, EventArgs e)
+        public static Panel InitPanel(in Panel panelPartners, int id, string type, string name, string director, string phoneNumber, string rating, string discount) //, string tin
         {
-            Panel panel = InitPanel(_y, "ООО|Тмыв Денег", "Директор\n88005553535\nРейтиг:10", 1);
-            panelPartners.Controls.Add(panel);
-        }
+            string typeAndName = String.Concat(type, "|", name);
+            string info = String.Concat(director, "\n", phoneNumber, "\nРейтинг: ", rating);
 
-        private Panel InitPanel(int id, string typeAndName, string info, int discount)
-        {
             Label labelDiscount = new Label();
             labelDiscount.AutoSize = true;
             labelDiscount.Dock = DockStyle.Right;
@@ -66,8 +65,8 @@ namespace Work_4
             partnerItem.Cursor = Cursors.Hand;
             partnerItem.Margin = new Padding(10);
             partnerItem.Name = "partnerItem" + id;
-            partnerItem.Padding = new Padding(15, 10, 15, 10);
-            partnerItem.Size = new Size(panelPartners.Width-30, 120);
+            partnerItem.Padding = new Padding(15);
+            partnerItem.Size = new Size(panelPartners.Width - 30, 120);
             partnerItem.TabIndex = 0;
             partnerItem.Left = 10;
             partnerItem.Top = 10 + _y;
@@ -76,14 +75,36 @@ namespace Work_4
             partnerItem.Controls.Add(labelTypeAndName);
             partnerItem.Controls.Add(labelDiscount);
             partnerItem.Controls.Add(labelId);
-            partnerItem.Click += ItemSelected_Click; 
+            partnerItem.Click += ItemSelected_Click;
 
             return partnerItem;
         }
 
-        private void ItemSelected_Click(object sender, EventArgs e)
+        public static List<string> GetValuesFromPanel()
         {
-            MessageBox.Show((sender as Panel).Name);
+            return new List<string>(); //Затычка
+        }
+
+        private static void ItemSelected_Click(object sender, EventArgs e)
+        {
+            //Int32.Parse(((sender as Panel).Controls.Find("labelId", true)[0] as Label).Text);
+            _selectedPanel = (Panel)sender;
+        }
+
+        /*Кнопки Create и Update вызывают одну форму, но в Update передается панель*/
+        private void BttnCreate_Click(object sender, EventArgs e)
+        {
+            FormEntry entry = new FormEntry(ref panelPartners, _db);
+            entry.ShowDialog();
+        }
+
+        private void BttnUpdate_Click(object sender, EventArgs e)
+        {
+            if (_selectedPanel != null)
+            {
+                FormEntry entry = new FormEntry(ref panelPartners, _db, _selectedPanel);
+                entry.ShowDialog();
+            }
         }
     }
 }
