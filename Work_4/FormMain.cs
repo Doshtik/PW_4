@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System.Windows.Forms;
+using Work_4.Models;
 
 namespace Work_4
 {
@@ -19,11 +20,21 @@ namespace Work_4
         {
             base.OnLoad(e);
             _db = new Models.AppContext();
+
+            //Подключаем необходимые таблицы
+            _db.TypesOfPartners.Load();
             _db.Partners.Load();
             _db.FromProductsToPartners.Load();
+
+            foreach (Partner partner in _db.Partners)
+            {
+                string typeOfPartner = _db.TypesOfPartners.Where(type => type.Id == partner.Id).Select(type => type.TypeOfPartner).FirstOrDefault();
+                Panel panel = InitPanel(this.panelPartners, typeOfPartner, partner.Name, partner.FullnameOfDirector, partner.PhoneNumber, partner.Rating, "0");
+                panelPartners.Controls.Add(panel);
+            }
         }
 
-        public static Panel InitPanel(in Panel panelPartners, int id, string type, string name, string director, string phoneNumber, string rating, string discount) //, string tin
+        public static Panel InitPanel(in Panel panelPartners, string type, string name, string director, string phoneNumber, short rating, string discount)
         {
             string typeAndName = String.Concat(type, "|", name);
             string info = String.Concat(director, "\n", phoneNumber, "\nРейтинг: ", rating);
@@ -55,16 +66,11 @@ namespace Work_4
             labelInfo.TabIndex = 3;
             labelInfo.Text = info;
 
-            Label labelId = new Label();
-            labelId.Name = "labelId";
-            labelId.Text = id.ToString();
-            labelId.Visible = false;
-
             Panel partnerItem = new Panel();
             partnerItem.BackColor = Color.White;
             partnerItem.Cursor = Cursors.Hand;
             partnerItem.Margin = new Padding(10);
-            partnerItem.Name = "partnerItem" + id;
+            partnerItem.Name = "partnerItem";
             partnerItem.Padding = new Padding(15);
             partnerItem.Size = new Size(panelPartners.Width - 30, 120);
             partnerItem.TabIndex = 0;
@@ -74,7 +80,6 @@ namespace Work_4
             partnerItem.Controls.Add(labelInfo);
             partnerItem.Controls.Add(labelTypeAndName);
             partnerItem.Controls.Add(labelDiscount);
-            partnerItem.Controls.Add(labelId);
             partnerItem.Click += ItemSelected_Click;
 
             return partnerItem;
@@ -89,6 +94,7 @@ namespace Work_4
         {
             //Int32.Parse(((sender as Panel).Controls.Find("labelId", true)[0] as Label).Text);
             _selectedPanel = (Panel)sender;
+            MessageBox.Show("Панель выбрана");
         }
 
         /*Кнопки Create и Update вызывают одну форму, но в Update передается панель*/
