@@ -26,15 +26,15 @@ namespace Work_4
             _db.Partners.Load();
             _db.FromProductsToPartners.Load();
 
-            foreach (Partner partner in _db.Partners)
+            foreach (Partner partner in _db.Partners.ToList<Partner>())
             {
-                string typeOfPartner = _db.TypesOfPartners.Where(type => type.Id == partner.Id).Select(type => type.TypeOfPartner).FirstOrDefault();
-                Panel panel = InitPanel(this.panelPartners, typeOfPartner, partner.Name, partner.FullnameOfDirector, partner.PhoneNumber, partner.Rating, "0");
+                string typeOfPartner = _db.TypesOfPartners.Where(type => type.Id == partner.IdOfPartner).Select(type => type.TypeOfPartner).FirstOrDefault();
+                Panel panel = InitPanel(this.panelPartners, partner.Id, typeOfPartner, partner.Name, partner.FullnameOfDirector, partner.PhoneNumber, partner.Rating, "0");
                 panelPartners.Controls.Add(panel);
             }
         }
 
-        public static Panel InitPanel(in Panel panelPartners, string type, string name, string director, string phoneNumber, short rating, string discount)
+        public static Panel InitPanel(in Panel panelPartners, int id, string type, string name, string director, string phoneNumber, short rating, string discount)
         {
             string typeAndName = String.Concat(type, "|", name);
             string info = String.Concat(director, "\n", phoneNumber, "\nРейтинг: ", rating);
@@ -66,6 +66,12 @@ namespace Work_4
             labelInfo.TabIndex = 3;
             labelInfo.Text = info;
 
+            Label labelId = new Label();
+            labelId.Visible = false;
+            labelId.Name = "labelId";
+            labelId.TabIndex = 4;
+            labelId.Text = id.ToString();
+
             Panel partnerItem = new Panel();
             partnerItem.BackColor = Color.White;
             partnerItem.Cursor = Cursors.Hand;
@@ -77,15 +83,18 @@ namespace Work_4
             partnerItem.Left = 10;
             partnerItem.Top = 10 + _y;
             _y += partnerItem.Height + 10;
+
             partnerItem.Controls.Add(labelInfo);
             partnerItem.Controls.Add(labelTypeAndName);
             partnerItem.Controls.Add(labelDiscount);
+            partnerItem.Controls.Add(labelId);
+
             partnerItem.Click += ItemSelected_Click;
 
             return partnerItem;
         }
 
-        public static List<string> GetValuesFromPanel()
+        public static List<string> GetValuesFromPanel(Panel panel)
         {
             return new List<string>(); //Затычка
         }
@@ -100,7 +109,7 @@ namespace Work_4
         /*Кнопки Create и Update вызывают одну форму, но в Update передается панель*/
         private void BttnCreate_Click(object sender, EventArgs e)
         {
-            FormEntry entry = new FormEntry(ref panelPartners, _db);
+            FormEntry entry = new FormEntry(ref panelPartners);
             entry.ShowDialog();
         }
 
@@ -108,7 +117,7 @@ namespace Work_4
         {
             if (_selectedPanel != null)
             {
-                FormEntry entry = new FormEntry(ref panelPartners, _db, _selectedPanel);
+                FormEntry entry = new FormEntry(ref panelPartners, _selectedPanel);
                 entry.ShowDialog();
             }
         }

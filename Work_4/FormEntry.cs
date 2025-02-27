@@ -7,12 +7,12 @@ namespace Work_4
         private Panel? _panel;
         private Panel _panelPartners;
 
-        public FormEntry(ref Panel panelPartners, Models.AppContext db)
+        public FormEntry(ref Panel panelPartners)
         {
             InitializeComponent();
             _panelPartners = panelPartners;
         }
-        public FormEntry(ref Panel panelPartners, Models.AppContext db, Panel panel)
+        public FormEntry(ref Panel panelPartners, Panel panel)
         {
             InitializeComponent();
             _panelPartners = panelPartners;
@@ -24,14 +24,14 @@ namespace Work_4
         {
             if (_panel != null)
             {
-                Panel panel = FormMain.InitPanel(_panelPartners, TypeTextBox.Text, NameTextBox.Text, DirectorTextBox.Text, PhoneNumberTextBox.Text, Int16.Parse(RatingTextBox.Text), DiscountTextBox.Text);
+                Panel panel = FormMain.InitPanel(_panelPartners, 1, TypeTextBox.Text, NameTextBox.Text, DirectorTextBox.Text, PhoneNumberTextBox.Text, Int16.Parse(RatingTextBox.Text), DiscountTextBox.Text);
                 // Здесь будет update записи с помощью _db
                 _panelPartners.Controls.Remove(_panel);
                 _panelPartners.Controls.Add(panel);
             }
             else
             {
-                Panel panel = FormMain.InitPanel(_panelPartners, TypeTextBox.Text, NameTextBox.Text, DirectorTextBox.Text, PhoneNumberTextBox.Text, Int16.Parse(RatingTextBox.Text), DiscountTextBox.Text);
+                Panel panel = FormMain.InitPanel(_panelPartners, 1, TypeTextBox.Text, NameTextBox.Text, DirectorTextBox.Text, PhoneNumberTextBox.Text, Int16.Parse(RatingTextBox.Text), DiscountTextBox.Text);
                 // Здесь будет create записи с помощью _db
                 _panelPartners.Controls.Add(panel);
             }
