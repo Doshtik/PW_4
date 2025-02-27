@@ -101,9 +101,13 @@ namespace Work_4
 
         private static void ItemSelected_Click(object sender, EventArgs e)
         {
-            //Int32.Parse(((sender as Panel).Controls.Find("labelId", true)[0] as Label).Text);
+            if (_selectedPanel != null)
+            {
+                _selectedPanel.BackColor = Color.White;
+            }
+
             _selectedPanel = (Panel)sender;
-            MessageBox.Show("ѕанель выбрана");
+            _selectedPanel.BackColor = SystemColors.ActiveCaption;
         }
 
         /* нопки Create и Update вызывают одну форму, но в Update передаетс€ панель*/
