@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            TypeTextBox = new TextBox();
             NameTextBox = new TextBox();
             TypeLabel = new Label();
             PartnerNameLabel = new Label();
@@ -36,21 +35,13 @@
             DirectorLabel = new Label();
             DirectorTextBox = new TextBox();
             PhoneNumberTextBox = new TextBox();
-            DiscountLabel = new Label();
             RatingLabel = new Label();
             RatingTextBox = new TextBox();
-            DiscountTextBox = new TextBox();
             TINLabel = new Label();
             TINTextBox = new TextBox();
             bttnConfirm = new Button();
+            TypeComboBox = new ComboBox();
             SuspendLayout();
-            // 
-            // TypeTextBox
-            // 
-            TypeTextBox.Location = new Point(172, 12);
-            TypeTextBox.Name = "TypeTextBox";
-            TypeTextBox.Size = new Size(113, 23);
-            TypeTextBox.TabIndex = 0;
             // 
             // NameTextBox
             // 
@@ -110,15 +101,6 @@
             PhoneNumberTextBox.Size = new Size(226, 23);
             PhoneNumberTextBox.TabIndex = 6;
             // 
-            // DiscountLabel
-            // 
-            DiscountLabel.AutoSize = true;
-            DiscountLabel.Location = new Point(12, 177);
-            DiscountLabel.Name = "DiscountLabel";
-            DiscountLabel.Size = new Size(67, 15);
-            DiscountLabel.TabIndex = 13;
-            DiscountLabel.Text = "Скидка (%)";
-            // 
             // RatingLabel
             // 
             RatingLabel.AutoSize = true;
@@ -135,18 +117,11 @@
             RatingTextBox.Size = new Size(56, 23);
             RatingTextBox.TabIndex = 11;
             // 
-            // DiscountTextBox
-            // 
-            DiscountTextBox.Location = new Point(172, 174);
-            DiscountTextBox.Name = "DiscountTextBox";
-            DiscountTextBox.Size = new Size(56, 23);
-            DiscountTextBox.TabIndex = 10;
-            // 
             // TINLabel
             // 
             TINLabel.AutoSize = true;
             TINLabel.Enabled = false;
-            TINLabel.Location = new Point(12, 209);
+            TINLabel.Location = new Point(12, 179);
             TINLabel.Name = "TINLabel";
             TINLabel.Size = new Size(34, 15);
             TINLabel.TabIndex = 15;
@@ -156,7 +131,7 @@
             // TINTextBox
             // 
             TINTextBox.Enabled = false;
-            TINTextBox.Location = new Point(172, 206);
+            TINTextBox.Location = new Point(172, 176);
             TINTextBox.Name = "TINTextBox";
             TINTextBox.Size = new Size(56, 23);
             TINTextBox.TabIndex = 14;
@@ -172,19 +147,27 @@
             bttnConfirm.UseVisualStyleBackColor = true;
             bttnConfirm.Click += BttnConfirm_Click;
             // 
+            // TypeComboBox
+            // 
+            TypeComboBox.FormattingEnabled = true;
+            TypeComboBox.Location = new Point(172, 12);
+            TypeComboBox.Name = "TypeComboBox";
+            TypeComboBox.Size = new Size(121, 23);
+            TypeComboBox.TabIndex = 17;
+            TypeComboBox.TextChanged += TypeComboBox_TextChanged;
+            // 
             // FormEntry
             // 
             AcceptButton = bttnConfirm;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(497, 305);
+            Controls.Add(TypeComboBox);
             Controls.Add(bttnConfirm);
             Controls.Add(TINLabel);
             Controls.Add(TINTextBox);
-            Controls.Add(DiscountLabel);
             Controls.Add(RatingLabel);
             Controls.Add(RatingTextBox);
-            Controls.Add(DiscountTextBox);
             Controls.Add(PhoneNumberLabel);
             Controls.Add(DirectorLabel);
             Controls.Add(DirectorTextBox);
@@ -192,7 +175,6 @@
             Controls.Add(PartnerNameLabel);
             Controls.Add(TypeLabel);
             Controls.Add(NameTextBox);
-            Controls.Add(TypeTextBox);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "FormEntry";
             StartPosition = FormStartPosition.CenterParent;
@@ -202,8 +184,6 @@
         }
 
         #endregion
-
-        private TextBox TypeTextBox;
         private TextBox NameTextBox;
         private Label TypeLabel;
         private Label PartnerNameLabel;
@@ -211,12 +191,11 @@
         private Label DirectorLabel;
         private TextBox DirectorTextBox;
         private TextBox PhoneNumberTextBox;
-        private Label DiscountLabel;
         private Label RatingLabel;
         private TextBox RatingTextBox;
-        private TextBox DiscountTextBox;
         private Label TINLabel;
         private TextBox TINTextBox;
         private Button bttnConfirm;
+        private ComboBox TypeComboBox;
     }
 }

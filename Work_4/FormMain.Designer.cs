@@ -30,6 +30,7 @@
         {
             backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             panelSettings = new Panel();
+            bttnHistory = new Button();
             bttnDelete = new Button();
             bttnUpdate = new Button();
             bttnCreate = new Button();
@@ -40,6 +41,7 @@
             // panelSettings
             // 
             panelSettings.BorderStyle = BorderStyle.FixedSingle;
+            panelSettings.Controls.Add(bttnHistory);
             panelSettings.Controls.Add(bttnDelete);
             panelSettings.Controls.Add(bttnUpdate);
             panelSettings.Controls.Add(bttnCreate);
@@ -47,8 +49,19 @@
             panelSettings.Location = new Point(0, 0);
             panelSettings.Margin = new Padding(5);
             panelSettings.Name = "panelSettings";
-            panelSettings.Size = new Size(1257, 73);
+            panelSettings.Size = new Size(984, 73);
             panelSettings.TabIndex = 0;
+            // 
+            // bttnHistory
+            // 
+            bttnHistory.Location = new Point(514, 11);
+            bttnHistory.Margin = new Padding(10);
+            bttnHistory.Name = "bttnHistory";
+            bttnHistory.Size = new Size(203, 48);
+            bttnHistory.TabIndex = 3;
+            bttnHistory.Text = "История реализации";
+            bttnHistory.UseVisualStyleBackColor = true;
+            bttnHistory.Click += BttnHistory_Click;
             // 
             // bttnDelete
             // 
@@ -59,6 +72,7 @@
             bttnDelete.TabIndex = 2;
             bttnDelete.Text = "Удалить";
             bttnDelete.UseVisualStyleBackColor = true;
+            bttnDelete.Click += BttnDelete_Click;
             // 
             // bttnUpdate
             // 
@@ -90,21 +104,25 @@
             panelPartners.Location = new Point(0, 73);
             panelPartners.Name = "panelPartners";
             panelPartners.Padding = new Padding(10);
-            panelPartners.Size = new Size(1257, 677);
+            panelPartners.Size = new Size(984, 588);
             panelPartners.TabIndex = 1;
             // 
             // FormMain
             // 
             AutoScaleDimensions = new SizeF(11F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1257, 750);
+            ClientSize = new Size(984, 661);
             Controls.Add(panelPartners);
             Controls.Add(panelSettings);
             Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             Margin = new Padding(5);
+            MaximumSize = new Size(1000, 700);
+            MinimumSize = new Size(750, 255);
             Name = "FormMain";
             ShowIcon = false;
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Список партнеров";
+            SizeChanged += FormMain_SizeChanged;
             panelSettings.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -116,5 +134,6 @@
         private Button bttnCreate;
         private Button bttnUpdate;
         private Button bttnDelete;
+        private Button bttnHistory;
     }
 }
