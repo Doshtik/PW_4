@@ -23,6 +23,18 @@ public partial class Partner
 
     public short Rating { get; set; }
 
+    public Partner(int idOfPartner, string name, string legalAdress, string tin, string nameOfDirector, string phoneNumber, string email, short rating)
+    {
+        IdOfPartner = idOfPartner;
+        Name = name;
+        LegalAdress = legalAdress;
+        Tin = tin;
+        FullnameOfDirector = nameOfDirector;
+        PhoneNumber = phoneNumber;
+        Email = email;
+        Rating = rating;
+    }
+
     public virtual ICollection<FromProductsToPartner> FromProductsToPartners { get; set; } = new List<FromProductsToPartner>();
 
     public virtual TypesOfPartner IdOfPartnerNavigation { get; set; } = null!;

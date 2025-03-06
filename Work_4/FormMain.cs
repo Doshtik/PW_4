@@ -11,7 +11,6 @@ namespace Work_4
         private static int _heigth = 130;
         private static Panel? _selectedPanel;
 
-
         public FormMain()
         {
             InitializeComponent();
@@ -29,7 +28,7 @@ namespace Work_4
 
             foreach (Partner partner in _db.Partners.ToList<Partner>())
             {
-                string typeOfPartner = _db.TypesOfPartners.Where(x => x.Id == partner.IdOfPartner).Select(x => x.TypeOfPartner).FirstOrDefault();
+                string typeOfPartner = _db.TypesOfPartners.Where(x => x.Id == partner.IdOfPartner).Select(x => x.TypeOfPartner).First();
                 string discount = "0";
                 int[] arrayAmountOfSold = _db.FromProductsToPartners.Where(x => x.IdOfPartner == partner.Id).Select(x => x.Amount).ToArray();
                 int amountOfSold = 0;
@@ -113,7 +112,7 @@ namespace Work_4
             return partnerItem;
         }
 
-        public static List<string> GetValuesFromPanel(Panel panel)
+        /*public static List<string> GetValuesFromPanel(Panel panel)
         {
             List<string> values = new List<string>();
 
@@ -132,18 +131,7 @@ namespace Work_4
             values.Add(panel.Controls.Find("labelDiscount", true)[0].Text.Substring(0, 1));
             values.Add(panel.Controls.Find("labelId", true)[0].Text);
             return values;
-        }
-
-        private static void ItemSelected_Click(object sender, EventArgs e)
-        {
-            if (_selectedPanel != null)
-            {
-                _selectedPanel.BackColor = Color.White;
-            }
-
-            _selectedPanel = (Panel)sender;
-            _selectedPanel.BackColor = SystemColors.ActiveCaption;
-        }
+        }*/
 
         //Кнопки Create и Update вызывают одну форму, но в Update передается панель
         private void BttnCreate_Click(object sender, EventArgs e)
@@ -156,7 +144,19 @@ namespace Work_4
         {
             if (_selectedPanel != null)
             {
-                FormEntry entry = new FormEntry(ref panelPartners, _selectedPanel);
+                //Перенос партнера с панели на объект
+                Partner partner;
+                using (Models.AppContext db = new Models.AppContext())
+                {
+                    int id = Int32.Parse(_selectedPanel.Controls.Find("labelId", true)[0].Text);
+                    partner = db.Partners.Where(x => x.Id == id).First();
+                }
+
+                //Убираем '%' от labelDiscount
+                string discount = _selectedPanel.Controls.Find("labelDiscount", true)[0].Text;
+                discount = discount.Substring(0, discount.Length - 1);
+
+                FormEntry entry = new FormEntry(ref panelPartners, _selectedPanel, partner, discount);
                 entry.ShowDialog();
 
                 _selectedPanel.BackColor = Color.White;
@@ -174,8 +174,6 @@ namespace Work_4
             {
                 foreach (Panel panel in panelPartners.Controls.Find("partnerItem", true))
                 {
-                    /*MessageBox.Show($"Y = {panel.Location.Y}\n" +
-                                    $"panel.{panel.Location.Y} > _selectedPanel.{_selectedPanel.Location.Y}");*/
                     if (panel.Location.Y > _selectedPanel.Location.Y)
                     {
                         Point location = panel.Location;
@@ -184,6 +182,7 @@ namespace Work_4
                     }
                 }
                 panelPartners.Controls.Remove(_selectedPanel);
+                _y -= _heigth;
             }
             else
             {
@@ -202,6 +201,17 @@ namespace Work_4
             {
                 MessageBox.Show("Партнер не выбран");
             }
+        }
+
+        private static void ItemSelected_Click(object sender, EventArgs e)
+        {
+            if (_selectedPanel != null)
+            {
+                _selectedPanel.BackColor = Color.White;
+            }
+
+            _selectedPanel = (Panel)sender;
+            _selectedPanel.BackColor = SystemColors.ActiveCaption;
         }
 
         //Должен подгонять длину панелек под длину 

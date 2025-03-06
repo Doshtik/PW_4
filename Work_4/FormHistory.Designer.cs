@@ -47,6 +47,7 @@
             ClientSize = new Size(800, 450);
             Controls.Add(panelHistory);
             Name = "FormHistory";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "FormHistory";
             ResumeLayout(false);
         }
