@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -25,19 +26,15 @@ namespace Work_4
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-
             using (Models.AppContext db = new Models.AppContext())
             {
-                foreach (FromProductsToPartner entry in db.FromProductsToPartners.Where(x => x.Id == _idOfPartner).ToList())
-                {
-                    panelHistory.Controls.Add(InitHistoryPanel(entry));
-                }
+                DGVHistory.DataSource = db.FromProductsToPartners
+                    .Include(i => i.Product)
+                    .Select(i=> new { i.Product.Name, i.Amount, i.DateOfSelling, i.IdOfPartner })
+                    .Where(x => x.IdOfPartner == _idOfPartner)                    
+                    .ToList();
             }
-        }
-
-        private Panel InitHistoryPanel(FromProductsToPartner entry)
-        {
-            return new Panel();
+            DGVHistory.Columns["IdOfPartner"].Visible = false;
         }
     }
 }

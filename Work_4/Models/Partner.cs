@@ -23,6 +23,8 @@ public partial class Partner
 
     public short Rating { get; set; }
 
+    public Partner() { }
+
     public Partner(int idOfPartner, string name, string legalAdress, string tin, string nameOfDirector, string phoneNumber, string email, short rating)
     {
         IdOfPartner = idOfPartner;
@@ -34,6 +36,8 @@ public partial class Partner
         Email = email;
         Rating = rating;
     }
+
+
 
     public virtual ICollection<FromProductsToPartner> FromProductsToPartners { get; set; } = new List<FromProductsToPartner>();
 

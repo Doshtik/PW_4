@@ -116,7 +116,6 @@
             Controls.Add(panelSettings);
             Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             Margin = new Padding(5);
-            MaximumSize = new Size(1000, 700);
             MinimumSize = new Size(750, 255);
             Name = "FormMain";
             ShowIcon = false;

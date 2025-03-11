@@ -36,12 +36,12 @@ public partial class AppContext : DbContext
 
             entity.HasIndex(e => e.IdOfProduct, "IX_FromProductsToPartners_IdOfProduct");
 
-            entity.HasOne(d => d.IdOfPartnerNavigation).WithMany(p => p.FromProductsToPartners)
+            entity.HasOne(d => d.Partner).WithMany(p => p.FromProductsToPartners)
                 .HasForeignKey(d => d.IdOfPartner)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_partner");
 
-            entity.HasOne(d => d.IdOfProductNavigation).WithMany(p => p.FromProductsToPartners)
+            entity.HasOne(d => d.Product).WithMany(p => p.FromProductsToPartners)
                 .HasForeignKey(d => d.IdOfProduct)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_product");

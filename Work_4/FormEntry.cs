@@ -15,19 +15,19 @@ namespace Work_4
         public FormEntry(ref Panel panelPartners)
         {
             InitializeComponent();
-            InitTypes();
+            SetupTypes();
             _panelPartners = panelPartners;
         }
-        public FormEntry(ref Panel panelPartners, Panel panel, Partner partner, string discount)
+        public FormEntry(ref Panel panelPartners, Panel selectedPanel, Partner partner, string discount)
         {
             InitializeComponent();
-            InitTypes();
 
             _partner = partner;
             _panelPartners = panelPartners;
-            _selectedPanel = panel;
+            _selectedPanel = selectedPanel;
             _discount = discount;
 
+            SetupTypes();
             NameTextBox.Text = _partner.Name;
             LegalAdressTextBox.Text = _partner.LegalAdress;
             TINTextBox.Text = _partner.Tin;
@@ -37,7 +37,7 @@ namespace Work_4
             RatingTextBox.Text = _partner.Rating.ToString();
         }
 
-        private void InitTypes()
+        private void SetupTypes()
         {
             using (Models.AppContext db = new Models.AppContext())
             {
@@ -45,6 +45,13 @@ namespace Work_4
                 TypeComboBox.DataSource = partnerTypes;
                 TypeComboBox.DisplayMember = "TypeOfPartner";
                 TypeComboBox.ValueMember = "Id";
+                if (_selectedPanel != null)
+                {
+                    string labelTypeAndName = _selectedPanel.Controls.Find("labelTypeAndName", true)[0].Text;
+                    string typeName = labelTypeAndName.Split('|')[0];
+                    int typeIndex = db.TypesOfPartners.OrderBy(x => x.Id).Where(x => x.TypeOfPartner == typeName).Select(x => x.Id).First();
+                    TypeComboBox.SelectedIndex = typeIndex-1;
+                }
             }
         }
 
@@ -57,28 +64,38 @@ namespace Work_4
         {
             if (_partner != null)
             {
-                
                 try
                 {
                     Panel panel;
                     // Здесь будет update записи с помощью _db
                     using (Models.AppContext db = new Models.AppContext())
                     {
-                        //Работа с типом партнера
-                        string typePartner = db.TypesOfPartners.Where(x => x.Id == _selectedTypeIndex).Select(x => x.TypeOfPartner).First();
+                        string typeOfPartner = db.TypesOfPartners
+                            .Where(x => x.Id == _selectedTypeIndex)
+                            .Select(x => x.TypeOfPartner)
+                            .First();
 
                         //Работа с БД
-                        Partner partner = new Partner(_selectedTypeIndex, NameTextBox.Text, LegalAdressTextBox.Text, TINTextBox.Text, DirectorTextBox.Text, PhoneNumberTextBox.Text, EmailTextBox.Text, Int16.Parse(RatingTextBox.Text));
-                        db.Partners.Add(partner);
+                        Partner dbPartner = db.Partners.First(x => x.Id == _partner.Id);
+
+                        dbPartner.IdOfPartner = _selectedTypeIndex;
+                        dbPartner.Name = NameTextBox.Text;
+                        dbPartner.LegalAdress = LegalAdressTextBox.Text;
+                        dbPartner.Tin = TINTextBox.Text;
+                        dbPartner.FullnameOfDirector = DirectorTextBox.Text;
+                        dbPartner.PhoneNumber = PhoneNumberTextBox.Text;
+                        dbPartner.Email = EmailTextBox.Text;
+                        dbPartner.Rating = Int16.Parse(RatingTextBox.Text);
+                        
                         db.SaveChanges();
 
                         //Переиницализация панели
-                        panel = FormMain.InitPanel(_panelPartners, _partner.Id, typePartner, NameTextBox.Text, DirectorTextBox.Text, PhoneNumberTextBox.Text, Int16.Parse(RatingTextBox.Text), _discount);
+                        panel = FormMain.SetupPanel(_panelPartners, _partner.Id, typeOfPartner, NameTextBox.Text, DirectorTextBox.Text, PhoneNumberTextBox.Text, Int16.Parse(RatingTextBox.Text), _discount);
                     }
                     panel.Location = _selectedPanel.Location;
-
-                    _panelPartners.Controls.Remove(_selectedPanel);
                     _panelPartners.Controls.Add(panel);
+                    _panelPartners.Controls.Remove(_selectedPanel);
+                    
                 }
                 catch
                 {
@@ -93,19 +110,36 @@ namespace Work_4
                     // Здесь будет create записи с помощью _db
                     using (Models.AppContext db = new Models.AppContext())
                     {
+                        string typeOfPartner = db.TypesOfPartners
+                            .Where(x => x.Id == _selectedTypeIndex)
+                            .Select(x => x.TypeOfPartner)
+                            .First();
+
                         //Работа с БД
-                        Partner partner = new Partner(_selectedTypeIndex, NameTextBox.Text, LegalAdressTextBox.Text, TINTextBox.Text, DirectorTextBox.Text, PhoneNumberTextBox.Text, EmailTextBox.Text ,Int16.Parse(RatingTextBox.Text));
+                        Partner partner = new Partner();
+
+                        partner.IdOfPartner = _selectedTypeIndex;
+                        partner.Name = NameTextBox.Text;
+                        partner.LegalAdress = LegalAdressTextBox.Text;
+                        partner.Tin = TINTextBox.Text;
+                        partner.FullnameOfDirector = DirectorTextBox.Text;
+                        partner.PhoneNumber = PhoneNumberTextBox.Text;
+                        partner.Email = EmailTextBox.Text;
+                        partner.Rating = Int16.Parse(RatingTextBox.Text);
+
                         db.Partners.Add(partner);
                         db.SaveChanges();
 
                         //Иницализация панели
-                        panel = FormMain.InitPanel(_panelPartners, 1, db.TypesOfPartners.Where(x => x.Id == _selectedTypeIndex).Select(x => x.TypeOfPartner).FirstOrDefault(), NameTextBox.Text, DirectorTextBox.Text, PhoneNumberTextBox.Text, Int16.Parse(RatingTextBox.Text), "0");
+                        int idOfPartner = db.Partners.Where(x => x.Tin == partner.Tin).Select(x => x.Id).First();
+                        panel = FormMain.SetupPanel(_panelPartners, idOfPartner, typeOfPartner, NameTextBox.Text, DirectorTextBox.Text, PhoneNumberTextBox.Text, Int16.Parse(RatingTextBox.Text), "0");
                     }
                     _panelPartners.Controls.Add(panel);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Не удалось создать запись");
+                    MessageBox.Show("Не удалось создать запись" +
+                        $"\n{ex.Message}");
                 }
             }
             this.Close();
