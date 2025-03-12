@@ -49,7 +49,11 @@ namespace Work_4
                 {
                     string labelTypeAndName = _selectedPanel.Controls.Find("labelTypeAndName", true)[0].Text;
                     string typeName = labelTypeAndName.Split('|')[0];
-                    int typeIndex = db.TypesOfPartners.OrderBy(x => x.Id).Where(x => x.TypeOfPartner == typeName).Select(x => x.Id).First();
+                    int typeIndex = db.TypesOfPartners
+                        .OrderBy(x => x.Id)
+                        .Where(x => x.TypeOfPartner == typeName)
+                        .Select(x => x.Id)
+                        .First();
                     TypeComboBox.SelectedIndex = typeIndex-1;
                 }
             }
@@ -90,7 +94,16 @@ namespace Work_4
                         db.SaveChanges();
 
                         //Переиницализация панели
-                        panel = FormMain.SetupPanel(_panelPartners, _partner.Id, typeOfPartner, NameTextBox.Text, DirectorTextBox.Text, PhoneNumberTextBox.Text, Int16.Parse(RatingTextBox.Text), _discount);
+                        panel = FormMain.SetupPanel(
+                            _panelPartners, 
+                            _partner.Id, 
+                            typeOfPartner, 
+                            NameTextBox.Text, 
+                            DirectorTextBox.Text, 
+                            PhoneNumberTextBox.Text, 
+                            Int16.Parse(RatingTextBox.Text), 
+                            _discount
+                        );
                     }
                     panel.Location = _selectedPanel.Location;
                     _panelPartners.Controls.Add(panel);
@@ -118,6 +131,7 @@ namespace Work_4
                         //Работа с БД
                         Partner partner = new Partner();
 
+                        partner.Id = db.Partners.OrderByDescending(x => x.Id).Select(x => x.Id).First()+1; //Очень противный костыль, но без него не работает
                         partner.IdOfPartner = _selectedTypeIndex;
                         partner.Name = NameTextBox.Text;
                         partner.LegalAdress = LegalAdressTextBox.Text;
@@ -131,14 +145,27 @@ namespace Work_4
                         db.SaveChanges();
 
                         //Иницализация панели
-                        int idOfPartner = db.Partners.Where(x => x.Tin == partner.Tin).Select(x => x.Id).First();
-                        panel = FormMain.SetupPanel(_panelPartners, idOfPartner, typeOfPartner, NameTextBox.Text, DirectorTextBox.Text, PhoneNumberTextBox.Text, Int16.Parse(RatingTextBox.Text), "0");
+                        int idOfPartner = db.Partners
+                            .Where(x => x.Tin == partner.Tin)
+                            .Select(x => x.Id)
+                            .First();
+
+                        panel = FormMain.SetupPanel(
+                            _panelPartners, 
+                            idOfPartner, 
+                            typeOfPartner, 
+                            NameTextBox.Text, 
+                            DirectorTextBox.Text, 
+                            PhoneNumberTextBox.Text, 
+                            Int16.Parse(RatingTextBox.Text), 
+                            "0"
+                        );
                     }
                     _panelPartners.Controls.Add(panel);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Не удалось создать запись" +
+                    MessageBox.Show("Не удалось создать запись:" +
                         $"\n{ex.Message}");
                 }
             }

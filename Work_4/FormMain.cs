@@ -6,7 +6,6 @@ namespace Work_4
 {
     public partial class FormMain : Form
     {
-        private Models.AppContext _db;
         private static int _y = 0;
         private static int _heigth = 130;
         private static Panel? _selectedPanel;
@@ -19,39 +18,7 @@ namespace Work_4
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            using (Models.AppContext db = new Models.AppContext())
-            {
-                foreach (Partner partner in db.Partners.OrderBy(x => x.Id).ToList<Partner>())
-                {
-                    string typeOfPartner = db.TypesOfPartners
-                        .Where(x => x.Id == partner.IdOfPartner)
-                        .Select(x => x.TypeOfPartner)
-                        .First();
-                    string discount = "0";
-                    int[] arrayAmountOfSold = db.FromProductsToPartners
-                        .Where(x => x.IdOfPartner == partner.Id)
-                        .Select(x => x.Amount)
-                        .ToArray();
-                    int amountOfSold = 0;
-
-                    for (int i = 0; i < arrayAmountOfSold.Length; i++)
-                    {
-                        amountOfSold += arrayAmountOfSold[i];
-                    }
-
-                    if (amountOfSold < 10000)
-                        discount = "0";
-                    else if (amountOfSold >= 10000 && amountOfSold < 50000)
-                        discount = "5";
-                    else if (amountOfSold >= 50000 && amountOfSold < 300000)
-                        discount = "10";
-                    else
-                        discount = "15";
-
-                    Panel panel = SetupPanel(this.panelPartners, partner.Id, typeOfPartner, partner.Name, partner.FullnameOfDirector, partner.PhoneNumber, partner.Rating, discount);
-                    panelPartners.Controls.Add(panel);
-                }
-            }
+            SetupPanels();
         }
 
         public static Panel SetupPanel(in Panel panelPartners, int id, string type, string name, string director, string phoneNumber, short rating, string discount)
@@ -113,11 +80,62 @@ namespace Work_4
             return partnerItem;
         }
 
+        private void SetupPanels()
+        {
+            using (Models.AppContext db = new Models.AppContext())
+            {
+                foreach (Partner partner in db.Partners.OrderByDescending(x => x.Id).ToList<Partner>())
+                {
+                    string typeOfPartner = db.TypesOfPartners
+                        .Where(x => x.Id == partner.IdOfPartner)
+                        .Select(x => x.TypeOfPartner)
+                        .First();
+                    string discount = "0";
+                    int[] arrayAmountOfSold = db.FromProductsToPartners
+                        .Where(x => x.IdOfPartner == partner.Id)
+                        .Select(x => x.Amount)
+                        .ToArray();
+                    int amountOfSold = 0;
+
+                    for (int i = 0; i < arrayAmountOfSold.Length; i++)
+                    {
+                        amountOfSold += arrayAmountOfSold[i];
+                    }
+
+                    if (amountOfSold < 10000)
+                        discount = "0";
+                    else if (amountOfSold >= 10000 && amountOfSold < 50000)
+                        discount = "5";
+                    else if (amountOfSold >= 50000 && amountOfSold < 300000)
+                        discount = "10";
+                    else
+                        discount = "15";
+
+                    Panel panel = SetupPanel(
+                        this.panelPartners,
+                        partner.Id,
+                        typeOfPartner,
+                        partner.Name,
+                        partner.FullnameOfDirector,
+                        partner.PhoneNumber,
+                        partner.Rating,
+                        discount
+                    );
+                    panelPartners.Controls.Add(panel);
+                }
+            }
+        }
+
         //Кнопки Create и Update вызывают одну форму, но в Update передается панель
         private void BttnCreate_Click(object sender, EventArgs e)
         {
             FormEntry entry = new FormEntry(ref panelPartners);
             entry.ShowDialog();
+
+            //Обновляем список
+            _y = 0;
+            panelPartners.Controls.Clear();
+            SetupPanels();
         }
 
         private void BttnUpdate_Click(object sender, EventArgs e)
@@ -141,8 +159,14 @@ namespace Work_4
                 FormEntry entry = new FormEntry(ref panelPartners, _selectedPanel, partner, discount);
                 entry.ShowDialog();
 
+                //Очищаем выбор
                 _selectedPanel.BackColor = Color.White;
                 _selectedPanel = null;
+
+                //Обновляем список
+                _y = 0;
+                panelPartners.Controls.Clear();
+                SetupPanels();
             }
             else
             {
@@ -165,20 +189,10 @@ namespace Work_4
                     db.SaveChanges();
                 }
 
-                //Сдвигаем панели
-                foreach (Panel panel in panelPartners.Controls.Find("partnerItem", true))
-                {
-                    if (panel.Location.Y > _selectedPanel.Location.Y)
-                    {
-                        Point location = panel.Location;
-                        location.Y -= _heigth;
-                        panel.Location = location;
-                    }
-                }
-
-                //Удляем запись у клиента
-                panelPartners.Controls.Remove(_selectedPanel);
-                _y -= _heigth;
+                //Обновляем список
+                _y = 0;
+                panelPartners.Controls.Clear();
+                SetupPanels();
             }
             else
             {
