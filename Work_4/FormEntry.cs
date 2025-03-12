@@ -131,7 +131,11 @@ namespace Work_4
                         //Работа с БД
                         Partner partner = new Partner();
 
-                        partner.Id = db.Partners.OrderByDescending(x => x.Id).Select(x => x.Id).First()+1; //Очень противный костыль, но без него не работает
+                        //Очень противный костыль, но без него не работает
+                        partner.Id = db.Partners
+                            .OrderByDescending(x => x.Id)
+                            .Select(x => x.Id)
+                            .First() + 1; 
                         partner.IdOfPartner = _selectedTypeIndex;
                         partner.Name = NameTextBox.Text;
                         partner.LegalAdress = LegalAdressTextBox.Text;
