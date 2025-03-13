@@ -92,22 +92,7 @@ namespace Work_4
                         dbPartner.Rating = Int16.Parse(RatingTextBox.Text);
                         
                         db.SaveChanges();
-
-                        //Переиницализация панели
-                        panel = FormMain.SetupPanel(
-                            _panelPartners, 
-                            _partner.Id, 
-                            typeOfPartner, 
-                            NameTextBox.Text, 
-                            DirectorTextBox.Text, 
-                            PhoneNumberTextBox.Text, 
-                            Int16.Parse(RatingTextBox.Text), 
-                            _discount
-                        );
                     }
-                    panel.Location = _selectedPanel.Location;
-                    _panelPartners.Controls.Add(panel);
-                    _panelPartners.Controls.Remove(_selectedPanel);
                     
                 }
                 catch
@@ -153,19 +138,7 @@ namespace Work_4
                             .Where(x => x.Tin == partner.Tin)
                             .Select(x => x.Id)
                             .First();
-
-                        panel = FormMain.SetupPanel(
-                            _panelPartners, 
-                            idOfPartner, 
-                            typeOfPartner, 
-                            NameTextBox.Text, 
-                            DirectorTextBox.Text, 
-                            PhoneNumberTextBox.Text, 
-                            Int16.Parse(RatingTextBox.Text), 
-                            "0"
-                        );
                     }
-                    _panelPartners.Controls.Add(panel);
                 }
                 catch (Exception ex)
                 {
